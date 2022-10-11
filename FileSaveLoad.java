@@ -42,7 +42,7 @@ public class FileSaveLoad extends JFrame implements ActionListener{
 		text.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		text.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 1) {
+				if (e.getClickCount() == 2) {
 				int index = text.locationToIndex(e.getPoint());
 				Object item = listmodel.getElementAt(index);
 				selectedValuesList.add(item.toString());
@@ -65,9 +65,8 @@ public class FileSaveLoad extends JFrame implements ActionListener{
     	
     	if (e.getSource() == load) {
     		int returnvalue = fc.showOpenDialog(FileSaveLoad.this);
-    		
+    		File file = fc.getSelectedFile();
     		if (returnvalue == JFileChooser.APPROVE_OPTION) {
-    			File file = fc.getSelectedFile();
     			try {
     			String currentline;
     			String filepathway = file.toString();
@@ -82,16 +81,25 @@ public class FileSaveLoad extends JFrame implements ActionListener{
     	}
 
     	if (e.getSource() == save) {
-    		int returnvalue = fc.showOpenDialog(FileSaveLoad.this);
+    		int returnvalue = fc.showSaveDialog(FileSaveLoad.this);
     		if (returnvalue == JFileChooser.APPROVE_OPTION) {
     			File file = fc.getSelectedFile();
     			try {
-					FileWriter fw = new FileWriter(file);
+    				//FileWriter fw = new FileWriter(file);
+    				//bw = new BufferedWriter(fw);
+    				FileWriter fw = new FileWriter(file);
 					bw = new BufferedWriter(fw);
-	    		for (int i=0; i < selectedValuesList.size(); i++) {
-	    			String lines = selectedValuesList.get(i);
-	    			bw.write(lines);
-	    		} 
+    				if (!file.exists()) {
+    					file.createNewFile();
+    				}
+    				for (int i=0; i < selectedValuesList.size(); i++) {
+    					String lines = selectedValuesList.get(i);
+    					System.out.println(lines);
+    					bw.write(lines + "\n");
+    				} 
+    				//for (Object content : ((DefaultListModel<String>) (text.getModel())).toArray()) {
+    				//	bw.write(content + "\n");
+    				//}
 	    		} catch (IOException e2) {
 	    			e2.printStackTrace();	
 	    		}	
